@@ -1,0 +1,1 @@
+# manticoresearch_on_kubernetes
