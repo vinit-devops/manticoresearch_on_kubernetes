@@ -1,6 +1,8 @@
 ## replace cluster_name  with cluster name with which you want to create cluster
 - name: install Manticore and copy config
-  hosts: manticore_nodes
+  hosts: 
+    - node1-ip
+    - node2-ip
   tasks:
     - name: install mysql client
       yum:
