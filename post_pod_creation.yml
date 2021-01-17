@@ -1,0 +1,40 @@
+# WARNING : BEFORE RUNNING THIS PLAYBOOK CHANGE hosts and vars h1 and h2 values and table_name in this playbook
+## Replace cluster-name with the name you mentioned in pre-pod-creation.yaml
+## also do change the index fields on line 26 according to your requirements or consult your developers for what fields are required in the feed.
+
+- hosts:  ip1
+  gather_facts: False
+# need to define hosts either while running playbook or in inventory file or in host_vars or edit here
+  vars:
+    - h1: ip1
+    - h2: ip2
+  tasks:
+     - block:
+       - name: create and join cluster
+         command: "{{ item }}"
+         with_items:
+          - mysql -h{{h1}} -P30306 -e "create cluster cluster-name 'cluster-name' as path"
+          - mysql -h{{h2}} -P30306 -e "join cluster cluster-name '{{h1}}:30312,{{h2}}:30312' as nodes, 'cluster-name' as path"
+       rescue:
+        - name: delete, create and join cluster
+          command: "{{ item }}"
+          with_items:
+            - mysql -h{{h1}} -P30306 -e "delete cluster cluster-name "
+            - mysql -h{{h2}} -P30306 -e "delete cluster cluster-name "
+            - mysql -h{{h1}} -P30306 -e "create cluster cluster-name 'cluster-name' as path"
+            - mysql -h{{h2}} -P30306 -e "join cluster cluster-name '{{h1}}:30312,{{h2}}:30312' as nodes, 'cluster-name' as path"
+     - shell:
+        cmd: for i in table_name;do mysql -h{{h1}} -P30306 -e "create table $i(title text indexed, description text indexed, brand text indexed,domain text indexed,redirect_url string, link_string string,title_string string,description_string string, campaign_id string) rt_mem_limit='10120M' min_infix_len='3'";done
+     - shell:
+        cmd: for i in table_name;do mysql -h{{h1}} -P30306 -e "alter cluster cluster-name add $i";done
+
+     - name: Get cluster status
+       ignore_errors: yes
+       shell : mysql -h{{h1}} -P30306 -e "show status" | grep 'cluster_cluster-name_node_state' | awk '{print $2}'
+       register : cluster_cluster-name_node_state_for_h1
+     - shell : mysql -h{{h2}} -P30306 -e "show status" | grep 'cluster_cluster-name_node_state' | awk '{print $2}'
+       register : cluster_cluster-name_node_state_for_h2
+     - debug :
+        var: cluster_cluster-name_node_state_for_h1.stdout
+     - debug :
+        var: cluster_cluster-name_node_state_for_h2.stdout
