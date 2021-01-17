@@ -57,7 +57,7 @@ STEPS FOR CLUSTER SET UP OF MANTICORESEARCH:
                  
               v) At last run below command to run ansible playbook to create cluster
                         ansible-playbook post_pod_creation.yml
-               at last step of playbook running if you see the status synced , the BINGO! mantcioer cluster is created successfully
+               at last step of playbook running if you see the status synced , the BINGO! mantcore cluster is created successfully
                
                
                To check cluster status you can run below commands on worker nodes
