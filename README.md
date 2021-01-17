@@ -3,7 +3,8 @@ This a semi-automated set up for manticore cluster set up on docker container-ru
 Technologies needed for this set up-
             i) Kubernetes
             ii) Ansible
-            iii) Git
+            iii) Git.
+            
 In this set up we are going to create two docker containers running manticoresearch latest service, both of which forming a cluster in which data is replicated from master to slave. Even if all the nodes goes down all the data will be safe within /docker-data, including your logs and mysql tables data.
 
 * post_pod_creation and pre_pod_creation consists of playbooks that needs to be run on ansible servers.
@@ -23,12 +24,14 @@ PRE-REQUISITES:
 STEPS FOR CLUSTER SET UP OF MANTICORESEARCH:
 
             i) Go to ansible server and take a pull of the repo
+            
                 git clone https://github.com/vinit-devops/manticoresearch_on_kubernetes.git
             
             ii) cd to manticoresearch_on_kubernetes/pre-pod-creation/ 
+            
                 edit hosts entry in pre-pod-creation.yml with the nodes or ip of kubernetes worker nodes ips on which service needs to be deployed.
                 Run ansible playbook with below command
-                ansible-playbook pre-pod-creation.yml
+                ansible-playbook pre-pod-creation.yml             
                 #ensure here that the manticore.conf exists on path manticoresearch_on_kubernetes/pre-pod-creation/new_files .
                         
             iii) Go to kubernetes master node and label nodes with commands
