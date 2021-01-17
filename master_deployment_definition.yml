@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manticore-dc
+  labels:
+    env: production
+    type: manticore-dc
+
+spec:
+  template:
+     metadata:
+       name: manticore-pod
+       labels:
+         type: manticore
+         feed: myfeedonk8s
+         status: master
+     spec:
+       affinity:
+            nodeAffinity:
+                 requiredDuringSchedulingIgnoredDuringExecution:
+                   nodeSelectorTerms:
+                        - matchExpressions:
+                                - key: ip
+                                  operator: In
+                                  values:
+                                    - qd1
+       containers:
+         - name: manticoresearch
+           image: manticoresearch/manticore
+
+           volumeMounts:
+                 - name: manticore-data
+                   mountPath: /var/lib/manticore
+                 - name: manticore-config
+                   mountPath: /etc/manticoresearch
+                 - name: manticore-logs
+                   mountPath: /var/log/manticore
+           ports:
+             - containerPort: 9306
+             - containerPort: 9312
+       volumes:
+             - name: manticore-data
+               hostPath:
+                     path: /docker-data/manticore_data
+                     type: Directory
+             - name: manticore-config
+               hostPath:
+                     path: /docker-data/manticore_config
+                     type: Directory
+             - name: manticore-logs
+               hostPath:
+                     path: /docker-data/manticore_logs
+                     type: Directory
+
+  replicas: 1
+  selector:
+    matchLabels:
+      type: manticore
+      feed: myfeedonk8s
+      status: master
