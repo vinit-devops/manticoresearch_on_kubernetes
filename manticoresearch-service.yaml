@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: manticoresearch
+spec:
+  type: NodePort
+  ports:
+  - name: "manticore-9306"
+    nodePort: 30306
+    port: 9306
+    targetPort: 9306
+  - name: "manticore-9312"
+    nodePort: 30312
+    port: 9312
+    targetPort: 9312
+  selector:
+         type: manticore
