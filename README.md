@@ -5,7 +5,7 @@ Technologies needed for this set up-
             ii) Ansible
             iii) Git.
             
-In this set up we are going to create two docker containers running manticoresearch latest service, both of which forming a cluster in which data is replicated from master to slave. Even if all the nodes goes down all the data will be safe within /docker-data, including your logs and mysql tables data.
+In this set up we are going to create two docker containers running manticoresearch latest service, both of which forming a cluster in which data is replicated from master to slave. Even if all the nodes goes down all the data will be safe within /docker-data on your host nodes, including your logs and mysql tables data.
 
 * post_pod_creation and pre_pod_creation consists of playbooks that needs to be run on ansible servers.
 * kubernetes-yml-files consists of defination files for various pods and services.
