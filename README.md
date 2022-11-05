@@ -64,5 +64,5 @@ STEPS FOR CLUSTER SET UP OF MANTICORESEARCH:
                                     mysql -h0 -P 30306 -e "show status " | grep node_state
 
 
-FOR ANY QUERY OR SUGGESTIONS: vinitk805582@gmail.com
+FOR ANY QUERY OR SUGGESTIONS: vk35dev@gmail.com
 
